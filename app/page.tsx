@@ -22,8 +22,12 @@ export default function Home() {
               className="max-h-full rounded-md"
             />
             <div className="self-center">
-              <h1 className="font-semibold text-slate-900">Teagan Croft</h1>
-              <p className="text-slate-500">teagan@croft.com</p>
+              <h1 className="font-semibold text-slate-900 dark:text-white">
+                Teagan Croft
+              </h1>
+              <p className="text-slate-500 dark:text-green-200">
+                teagan@croft.com
+              </p>
             </div>
             <div className="absolute top-0 right-0 mt-2 mr-2 flex overflow-hidden rounded-md border">
               <Button
@@ -32,7 +36,7 @@ export default function Home() {
               >
                 Edit
               </Button>
-              <hr className="h-full w-[0.5px] bg-slate-300" />
+              <hr className="bg-input h-auto w-[0.5px] lg:w-[0.7px]" />
               <Button
                 variant="outline"
                 className="text-destructive rounded-none border-none shadow-none"
