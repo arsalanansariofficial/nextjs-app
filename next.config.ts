@@ -1,3 +1,5 @@
 import type { NextConfig } from 'next';
 
-export default {} as NextConfig;
+export default {
+  devIndicators: false
+} as NextConfig;

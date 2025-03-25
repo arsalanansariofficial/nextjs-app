@@ -12,7 +12,7 @@
     "isolatedModules": true,
     "resolveJsonModule": true,
     "moduleResolution": "bundler",
-    "paths": { "~/app/*": ["./*"] },
+    "paths": { "~/*": ["./app/*"] },
     "plugins": [{ "name": "next" }],
     "lib": ["dom", "dom.iterable", "esnext"]
   },
