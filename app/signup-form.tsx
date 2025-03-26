@@ -50,6 +50,9 @@ export default function SignupForm() {
         <Input type="file" id="picture" name="image" />
       </div>
       <Button type="submit">Submit</Button>
+      {state?.message && (
+        <p className="text-destructive text-xs font-normal">{state.message}</p>
+      )}
     </form>
   );
 }
