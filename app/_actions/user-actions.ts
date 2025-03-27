@@ -3,35 +3,45 @@
 import z from 'zod';
 import path from 'path';
 import fs from 'fs/promises';
-import { User } from '@prisma/client';
+
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 
-import { getImageName } from '~/lib/utils';
+import { getImageName } from '~/_lib/utils';
 import * as userRepository from '~/_data/user-repository';
+import { State } from '~/_lib/definitions';
 
-const emailError = { invalid: { message: 'Shold be valid Email' } };
-const nameError = { min: { message: 'Should be atleast 7 characters' } };
+const errors = {
+  email: { invalid: { message: 'Shold be valid Email' } },
+  name: { min: { message: 'Should be atleast 7 characters' } }
+};
 
 const signupSchema = z.object({
-  name: z.string().min(7, nameError.min),
-  email: z.string().email(emailError.invalid)
+  name: z.string().min(7, errors.name.min),
+  email: z.string().email(errors.email.invalid)
 });
 
 const editSchema = z.object({
-  name: z.string().min(7, nameError.min).optional(),
-  email: z.string().email(emailError.invalid).optional()
+  name: z.string().min(7, errors.name.min).optional(),
+  email: z.string().email(errors.email.invalid).optional()
 });
 
-export type State = {
-  image?: File;
-  name?: string;
-  email?: string;
-  message?: string;
-  errors?: { name?: string[]; email?: string[] };
-};
+export async function deleteUser(id: string) {
+  try {
+    const user = await userRepository.getUser(id);
+    const deleted = await userRepository.deleteUser(id);
 
-export async function signup(_: State, formData: FormData): Promise<State> {
+    if (!user || !deleted) return { message: 'Failed to delete user' };
+    await fs.unlink(path.join(process.cwd(), 'public', user.image));
+
+    revalidatePath('/');
+    return { user };
+  } catch {
+    return { message: 'Failed to delete user' };
+  }
+}
+
+export async function signupUser(_: State, formData: FormData): Promise<State> {
   const image = formData.get('image') as File;
   const name = formData.get('name') as string;
   const email = formData.get('email') as string;
@@ -44,7 +54,7 @@ export async function signup(_: State, formData: FormData): Promise<State> {
 
   const fileName = getImageName(image);
   const filePath = path.join(process.cwd(), 'public', fileName);
-  const defaultPath = path.join(process.cwd(), 'public/user.jpg');
+  const defaultPath = path.join(process.cwd(), 'public/sample/user.jpg');
 
   try {
     let { buffer } = await fs.readFile(defaultPath);
@@ -65,7 +75,7 @@ export async function signup(_: State, formData: FormData): Promise<State> {
   }
 }
 
-export async function editUser(
+export async function updateUser(
   id: string,
   _: State,
   formData: FormData
@@ -102,19 +112,4 @@ export async function editUser(
 
   revalidatePath('/');
   redirect('/');
-}
-
-export async function removeUser(id: string): Promise<string | User> {
-  try {
-    const user = await userRepository.getUser(id);
-    const deleted = await userRepository.deleteUser(id);
-
-    if (!user || !deleted) return 'Failed to delete user';
-    await fs.unlink(path.join(process.cwd(), 'public', user.image));
-
-    revalidatePath('/');
-    return user;
-  } catch {
-    return 'Failed to delete user';
-  }
 }

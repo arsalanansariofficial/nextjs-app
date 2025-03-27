@@ -6,12 +6,12 @@ export default async function Home() {
   const users = await getUsers();
 
   return (
-    <main className="grid min-h-screen lg:grid-cols-2 xl:block xl:p-5">
+    <main className="grid min-h-screen space-y-5 p-5 lg:grid-cols-2 lg:space-y-0 xl:block xl:space-y-5">
       <div className="space-y-4 self-center justify-self-center text-xl font-semibold">
         <h1 className="text-center text-2xl">Add User</h1>
         <SignupForm />
       </div>
-      <aside className="space-y-4 p-4 xl:justify-self-center">
+      <aside className="space-y-4 justify-self-center p-4 lg:justify-self-stretch xl:justify-self-center">
         <h2 className="text-center font-semibold lg:text-left xl:text-center">
           Available users
         </h2>

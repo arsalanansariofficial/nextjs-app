@@ -10,6 +10,5 @@ export function cn(...inputs: ClassValue[]) {
 export function getImageName(image: File) {
   const ext = path.extname(image.size ? image.name : 'user.jpg');
   const base = path.basename(image.size ? image.name : 'user.jpg', ext);
-
   return `${base}_${crypto.randomBytes(8).toString('hex')}${ext}`;
 }

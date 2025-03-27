@@ -2,14 +2,10 @@ import { User } from '@prisma/client';
 
 import SignupForm from '~/signup-form';
 import { getUser } from '~/_data/user-repository';
+import { EditPageProps } from '~/_lib/definitions';
 
-type EditProps = {
-  params: { id: string };
-};
-
-export default async function Page(props: EditProps) {
-  const id = props.params.id;
-  const user = await getUser(id);
+export default async function Page(props: EditPageProps) {
+  const user = await getUser((await props.params).id);
 
   return (
     <main className="grid min-h-screen place-content-center">

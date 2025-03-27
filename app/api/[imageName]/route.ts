@@ -1,14 +1,12 @@
 import path from 'path';
 import fs from 'fs/promises';
 
-type RouteProps = { params: { imageName: string } };
+import { RouteProps } from '~/_lib/definitions';
 
 export async function GET(_req: Request, routeProps: RouteProps) {
-  const imageName = routeProps.params.imageName;
-
   try {
     const image = await fs.readFile(
-      path.join(process.cwd(), 'public', imageName)
+      path.join(process.cwd(), 'public', (await routeProps.params).imageName)
     );
 
     return new Response(image, {

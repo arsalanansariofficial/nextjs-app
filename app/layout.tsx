@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Geist_Mono } from 'next/font/google';
 
-import { PropsWithChildren } from '~/_definitions/props';
+import { PropsWithChildren } from '~/_lib/definitions';
 
 import './globals.css';
 

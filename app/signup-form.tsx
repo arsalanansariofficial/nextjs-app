@@ -1,19 +1,22 @@
 'use client';
 
-import { User } from '@prisma/client';
 import { useActionState } from 'react';
 
+import { State } from '~/_lib/definitions';
+import { EditProps } from '~/_lib/definitions';
 import { Label } from '~/_components/ui/label';
 import { Input } from '~/_components/ui/input';
 import { Button } from '~/_components/ui/button';
-import { editUser, signup, State } from '~/_actions/user-actions';
+import { signupUser, updateUser } from '~/_actions/user-actions';
 
-export default function SignupForm(props: { user?: User }) {
-  const user = props.user;
-  const action = user ? editUser.bind(null, user.id) : signup;
-
+export default function SignupForm(props: EditProps) {
+  let action = signupUser;
   let initialState: State = {};
-  if (user) initialState = { name: user.name, email: user.email };
+
+  if (props.user) {
+    action = updateUser.bind(null, props.user.id);
+    initialState = { name: props.user.name, email: props.user.email };
+  }
 
   const [state, formAction] = useActionState(action, initialState);
 

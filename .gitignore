@@ -17,7 +17,7 @@
 /build
 
 # Environments
-.env*
+.env
 
 # Typescript
 *.tsbuildinfo
