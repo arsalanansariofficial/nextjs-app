@@ -17,6 +17,14 @@ export async function saveUser(user: User) {
   }
 }
 
+export async function updateUser(id: string, user: User) {
+  try {
+    return await prisma.user.update({ data: user, where: { id } });
+  } catch {
+    return null;
+  }
+}
+
 export async function getUsers() {
   try {
     return await prisma.user.findMany();
