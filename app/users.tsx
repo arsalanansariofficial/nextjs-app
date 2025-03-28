@@ -40,10 +40,18 @@ export default function Users(props: UsersProps) {
               className="aspect-video rounded-md object-fill"
             />
           </div>
-          <div className="self-center">
-            <h1 className="font-semibold">{user.name}</h1>
-            <p className="text-green-700 dark:text-green-200">{user.email}</p>
-            {error && <p className="text-destructive">{error}</p>}
+          <div className="self-center overflow-hidden">
+            <h1 className="overflow-hidden font-semibold text-ellipsis">
+              {user.name}
+            </h1>
+            <p className="overflow-hidden text-ellipsis text-green-700 dark:text-green-200">
+              {user.email}
+            </p>
+            {error && (
+              <p className="text-destructive overflow-hidden text-ellipsis">
+                {error}
+              </p>
+            )}
           </div>
           <div className="grid grid-cols-[1fr_0.5px_1fr] overflow-hidden rounded-md border lg:absolute lg:top-0 lg:right-0 lg:mt-2 lg:mr-2">
             <Button
