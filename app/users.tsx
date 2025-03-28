@@ -23,31 +23,29 @@ export default function Users(props: UsersProps) {
       {props.users.map(user => (
         <li
           key={user.id}
-          className="border-input relative grid min-w-[10em] gap-4 rounded-md border p-4 sm:min-w-[30em] lg:grid-cols-[auto_1fr] xl:grid-cols-none"
+          className="relative container grid gap-4 rounded-md border p-4 lg:grid-cols-[auto_1fr]"
         >
           <Image
             width={100}
             height={100}
             alt={user.name}
             src={`/api/${user.image}`}
-            className="hidden aspect-square h-full rounded-md object-cover lg:block xl:hidden"
+            className="hidden aspect-square rounded-md object-fill lg:block"
           />
-          <div className="xl:max-h-75- relative aspect-video lg:hidden xl:block">
+          <div className="relative aspect-video lg:hidden">
             <Image
               fill
               alt={user.name}
               src={`/api/${user.image}`}
-              className="aspect-video rounded-md object-cover"
+              className="aspect-video rounded-md object-fill"
             />
           </div>
           <div className="self-center">
-            <h1 className="font-semibold text-slate-900 dark:text-white">
-              {user.name}
-            </h1>
-            <p className="text-slate-500 dark:text-green-200">{user.email}</p>
+            <h1 className="font-semibold">{user.name}</h1>
+            <p className="text-green-700 dark:text-green-200">{user.email}</p>
             {error && <p className="text-destructive">{error}</p>}
           </div>
-          <div className="grid max-w-fit grid-cols-[1fr_auto_1fr] overflow-hidden rounded-md border md:ml-auto lg:absolute lg:top-0 lg:right-0 lg:mt-2 lg:mr-2 lg:flex xl:static">
+          <div className="grid grid-cols-[1fr_0.5px_1fr] overflow-hidden rounded-md border lg:absolute lg:top-0 lg:right-0 lg:mt-2 lg:mr-2">
             <Button
               variant="outline"
               onClick={() => router.push(`/${user.id}/edit`)}
@@ -55,7 +53,7 @@ export default function Users(props: UsersProps) {
             >
               Edit
             </Button>
-            <hr className="bg-input h-full w-[0.5px] lg:h-auto lg:w-[0.7px]" />
+            <hr className="bg-input h-full" />
             <Button
               variant="outline"
               onClick={async () => await handleDeleteUser(user.id)}

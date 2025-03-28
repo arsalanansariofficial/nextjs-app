@@ -1,4 +1,5 @@
 import React from 'react';
+import { ThemeProvider as NextThemesProvider } from 'next-themes';
 
 import { User } from '@prisma/client';
 import * as LabelPrimitive from '@radix-ui/react-label';
@@ -20,6 +21,9 @@ export type LabelProps = React.ComponentProps<typeof LabelPrimitive.Root>;
 
 export type ButtonProps = React.ComponentProps<'button'> &
   VariantProps<typeof buttonVariants> & { asChild?: boolean };
+export type ThemeProviderProps = React.ComponentProps<
+  typeof NextThemesProvider
+>;
 
 export type State = {
   image?: File;

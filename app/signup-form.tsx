@@ -21,11 +21,8 @@ export default function SignupForm(props: EditProps) {
   const [state, formAction] = useActionState(action, initialState);
 
   return (
-    <form
-      action={formAction}
-      className="border-input space-y-4 rounded-md border p-4"
-    >
-      <div className="grid w-full max-w-sm items-center gap-1.5">
+    <form action={formAction} className="space-y-4 rounded-md border p-4">
+      <div className="grid gap-1.5">
         <Label htmlFor="name">Name</Label>
         <Input
           id="name"
@@ -50,9 +47,7 @@ export default function SignupForm(props: EditProps) {
           placeholder="teagan@croft.com"
         />
         {state?.errors?.email && (
-          <p className="text-destructive text-xs font-normal">
-            {state.errors.email}
-          </p>
+          <p className="text-destructive text-xs">{state.errors.email}</p>
         )}
       </div>
       <div className="grid w-full max-w-sm items-center gap-1.5">
