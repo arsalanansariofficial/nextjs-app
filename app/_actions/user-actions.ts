@@ -3,6 +3,7 @@
 import z from 'zod';
 import path from 'path';
 import fs from 'fs/promises';
+import { admin, signIn, loginSchema } from '../../auth';
 
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
@@ -10,6 +11,7 @@ import { revalidatePath } from 'next/cache';
 import { getImageName } from '~/_lib/utils';
 import * as userRepository from '~/_data/user-repository';
 import { loginState, SignupState } from '~/_lib/definitions';
+import { AuthError } from 'next-auth';
 
 const errors = {
   email: { invalid: { message: 'Shold be valid Email' } },
@@ -24,11 +26,6 @@ const signupSchema = z.object({
 const editSchema = z.object({
   name: z.string().min(7, errors.name.min).optional(),
   email: z.string().email(errors.email.invalid).optional()
-});
-
-const loginSchema = z.object({
-  email: z.string().email(errors.email.invalid),
-  password: z.string().nonempty({ message: 'Password is required' })
 });
 
 export async function deleteUser(id: string) {
@@ -123,9 +120,9 @@ export async function updateUser(
 }
 
 export async function loginAdmin(
-  _: loginState,
+  _: loginState | string,
   formData: FormData
-): Promise<loginState> {
+): Promise<loginState | string> {
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
   const result = loginSchema.safeParse({ email, password });
@@ -135,12 +132,21 @@ export async function loginAdmin(
   }
 
   try {
-    if (email === 'admin@admin.com' && password === 'admin') {
-      return { email, password };
+    if (email === admin.email && password === admin.password) {
+      return await signIn('credentials', formData);
     }
 
-    throw new Error('Login failed');
+    return { email, password, message: 'Login failed' };
   } catch (error: unknown) {
-    return { email, password, message: (error as Error).message };
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case 'CredentialsSignin':
+          return 'Invalid credentials.';
+        default:
+          return 'Something went wrong.';
+      }
+    }
+
+    throw error;
   }
 }
