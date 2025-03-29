@@ -25,7 +25,17 @@ export type ThemeProviderProps = React.ComponentProps<
   typeof NextThemesProvider
 >;
 
-export type State = {
+export type loginState = {
+  email?: string;
+  message?: string;
+  password?: string;
+  errors?: {
+    email?: string[];
+    password?: string[];
+  };
+};
+
+export type SignupState = {
   image?: File;
   name?: string;
   email?: string;

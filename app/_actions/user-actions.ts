@@ -9,7 +9,7 @@ import { revalidatePath } from 'next/cache';
 
 import { getImageName } from '~/_lib/utils';
 import * as userRepository from '~/_data/user-repository';
-import { State } from '~/_lib/definitions';
+import { loginState, SignupState } from '~/_lib/definitions';
 
 const errors = {
   email: { invalid: { message: 'Shold be valid Email' } },
@@ -24,6 +24,11 @@ const signupSchema = z.object({
 const editSchema = z.object({
   name: z.string().min(7, errors.name.min).optional(),
   email: z.string().email(errors.email.invalid).optional()
+});
+
+const loginSchema = z.object({
+  email: z.string().email(errors.email.invalid),
+  password: z.string().nonempty({ message: 'Password is required' })
 });
 
 export async function deleteUser(id: string) {
@@ -41,14 +46,17 @@ export async function deleteUser(id: string) {
   }
 }
 
-export async function signupUser(_: State, formData: FormData): Promise<State> {
+export async function signupUser(
+  _: SignupState,
+  formData: FormData
+): Promise<SignupState> {
   const image = formData.get('image') as File;
   const name = formData.get('name') as string;
   const email = formData.get('email') as string;
   const result = signupSchema.safeParse({ name, email });
 
   if (!result.success) {
-    const errors = result.error.flatten().fieldErrors as State['errors'];
+    const errors = result.error.flatten().fieldErrors as SignupState['errors'];
     return { name, email, errors };
   }
 
@@ -77,9 +85,9 @@ export async function signupUser(_: State, formData: FormData): Promise<State> {
 
 export async function updateUser(
   id: string,
-  _: State,
+  _: SignupState,
   formData: FormData
-): Promise<State> {
+): Promise<SignupState> {
   const updateUser = userRepository.updateUser;
   const saved = await userRepository.getUser(id);
   if (!saved) return { message: 'Failed to update' };
@@ -90,7 +98,7 @@ export async function updateUser(
   const result = editSchema.safeParse({ name, email });
 
   if (!result.success) {
-    const errors = result.error.flatten().fieldErrors as State['errors'];
+    const errors = result.error.flatten().fieldErrors as SignupState['errors'];
     return { name, email, errors };
   }
 
@@ -112,4 +120,27 @@ export async function updateUser(
 
   revalidatePath('/');
   redirect('/');
+}
+
+export async function loginAdmin(
+  _: loginState,
+  formData: FormData
+): Promise<loginState> {
+  const email = formData.get('email') as string;
+  const password = formData.get('password') as string;
+  const result = loginSchema.safeParse({ email, password });
+
+  if (!result.success) {
+    return { email, password, errors: result.error.flatten().fieldErrors };
+  }
+
+  try {
+    if (email === 'admin@admin.com' && password === 'admin') {
+      return { email, password };
+    }
+
+    throw new Error('Login failed');
+  } catch (error: unknown) {
+    return { email, password, message: (error as Error).message };
+  }
 }
