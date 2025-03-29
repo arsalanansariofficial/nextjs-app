@@ -30,6 +30,7 @@ export const authConfig = {
 
 export const { auth, signIn, signOut } = NextAuth({
   ...authConfig,
+  pages: { signIn: '/login' },
   providers: [
     Credentials({
       async authorize(credentials) {

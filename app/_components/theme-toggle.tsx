@@ -12,7 +12,7 @@ export default function ThemeToggle() {
     <Button
       size="icon"
       variant="outline"
-      className="justify-self-end"
+      className="col-start-2 justify-self-end-"
       onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
     >
       <Sun className="h-[1.2rem] w-[1.2rem] scale-0 -rotate-90 transition-all dark:scale-100 dark:rotate-0" />

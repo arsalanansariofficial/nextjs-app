@@ -2,16 +2,16 @@
 
 import { useActionState } from 'react';
 
-import { State } from '~/_lib/definitions';
 import { EditProps } from '~/_lib/definitions';
 import { Label } from '~/_components/ui/label';
 import { Input } from '~/_components/ui/input';
+import { SignupState } from '~/_lib/definitions';
 import { Button } from '~/_components/ui/button';
 import { signupUser, updateUser } from '~/_actions/user-actions';
 
 export default function SignupForm(props: EditProps) {
   let action = signupUser;
-  let initialState: State = {};
+  let initialState: SignupState = {};
 
   if (props.user) {
     action = updateUser.bind(null, props.user.id);

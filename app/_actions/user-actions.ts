@@ -3,7 +3,7 @@
 import z from 'zod';
 import path from 'path';
 import fs from 'fs/promises';
-import { admin, signIn, loginSchema } from '../../auth';
+import { admin, signIn, loginSchema, signOut } from '../../auth';
 
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
@@ -11,7 +11,6 @@ import { revalidatePath } from 'next/cache';
 import { getImageName } from '~/_lib/utils';
 import * as userRepository from '~/_data/user-repository';
 import { loginState, SignupState } from '~/_lib/definitions';
-import { AuthError } from 'next-auth';
 
 const errors = {
   email: { invalid: { message: 'Shold be valid Email' } },
@@ -120,9 +119,9 @@ export async function updateUser(
 }
 
 export async function loginAdmin(
-  _: loginState | string,
+  _: loginState,
   formData: FormData
-): Promise<loginState | string> {
+): Promise<loginState> {
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
   const result = loginSchema.safeParse({ email, password });
@@ -131,22 +130,14 @@ export async function loginAdmin(
     return { email, password, errors: result.error.flatten().fieldErrors };
   }
 
-  try {
-    if (email === admin.email && password === admin.password) {
-      return await signIn('credentials', formData);
-    }
-
-    return { email, password, message: 'Login failed' };
-  } catch (error: unknown) {
-    if (error instanceof AuthError) {
-      switch (error.type) {
-        case 'CredentialsSignin':
-          return 'Invalid credentials.';
-        default:
-          return 'Something went wrong.';
-      }
-    }
-
-    throw error;
+  if (email === admin.email && password === admin.password) {
+    return await signIn('credentials', formData);
   }
+
+  return { email, password, message: 'Login failed' };
+}
+
+export async function logoutAdmin() {
+  'use server';
+  await signOut();
 }

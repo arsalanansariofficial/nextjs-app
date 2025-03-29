@@ -4,13 +4,11 @@ import { useActionState } from 'react';
 
 import { Input } from '~/_components/ui/input';
 import { Label } from '~/_components/ui/label';
-import { loginState } from '~/_lib/definitions';
 import { Button } from '~/_components/ui/button';
 import { loginAdmin } from '~/_actions/user-actions';
 
 export default function Page() {
-  const [_state, formAction] = useActionState(loginAdmin, {});
-  const state = _state as loginState;
+  const [state, formAction] = useActionState(loginAdmin, {});
 
   return (
     <main className="container mx-auto grid min-h-screen place-content-center">
